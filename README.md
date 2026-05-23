@@ -53,6 +53,7 @@ nsp-4-s2-s25app/
 - Java 17+
 - Node.js 18+ & npm
 - A free [Hugging Face account](https://huggingface.co/settings/tokens) (for API token)
+We have to add token while running in local, as we can't keep token in github
 
 ---
 
