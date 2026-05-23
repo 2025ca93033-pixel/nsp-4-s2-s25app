@@ -1,0 +1,45 @@
+.typing-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.avatar-bot {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  background: #1a1f2e;
+  color: #7dd3a8;
+  border: 1px solid #2a3040;
+}
+
+.typing-bubble {
+  background: #1a1f2e;
+  border: 1px solid #262c3e;
+  border-radius: 4px 12px 12px 12px;
+  padding: 14px 18px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4a5568;
+  animation: bounce 1.1s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+  40%            { transform: scale(1);   opacity: 1;   }
+}
