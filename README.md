@@ -1,18 +1,26 @@
-# NSP-4-S2-S25App
+# NSP-4-S2-S25App — AI Q&A Assistant
 
-> **DevOps Assignment 1** · BITS WILP  
-> LLM-powered Q&A web app · React JS + Java Spring Boot + Hugging Face API
+A full-stack AI-powered Q&A application built with React and Spring Boot, integrated with Hugging Face LLM API.
+
+---
+
+## Assignment Details
+
+- **Course:** BITS WILP — DevOps
+- **Topic:** Feature Branch Workflow Implementation
+- **Goal:** Simulate 2 developers working on separate feature branches, create a merge conflict, resolve it, and merge to main only after Pull Request review.
 
 ---
 
 ## Tech Stack
 
-| Layer     | Technology                          |
-|-----------|-------------------------------------|
-| Frontend  | React JS 18, Axios                  |
-| Backend   | Java 17, Spring Boot 3.2, Maven     |
-| AI / LLM  | Hugging Face `google/flan-t5-large` |
-| API Style | REST (JSON)                         |
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Axios |
+| Backend | Java 17, Spring Boot 3.2.5, Maven |
+| AI API | Hugging Face — google/flan-t5-large |
+| Version Control | Git + GitHub |
+| IDE | Spring Tool Suite 4 (STS/Eclipse) |
 
 ---
 
@@ -20,163 +28,175 @@
 
 ```
 nsp-4-s2-s25app/
-├── backend/                          # Spring Boot
+├── backend/
 │   ├── pom.xml
 │   └── src/main/java/com/nsp/app/
-│       ├── NspApplication.java       # Entry point
-│       ├── config/CorsConfig.java    # CORS for React
-│       ├── controller/
-│       │   └── LLMController.java    # POST /api/ask, GET /api/health
+│       ├── NspApplication.java
+│       ├── config/CorsConfig.java
+│       ├── controller/LLMController.java
 │       ├── model/
 │       │   ├── AskRequest.java
 │       │   └── AskResponse.java
-│       └── service/
-│           └── LLMService.java       # Calls Hugging Face API
-│
-└── frontend/                         # React JS
+│       └── service/LLMService.java
+└── frontend/
     ├── package.json
-    ├── public/index.html
     └── src/
-        ├── App.js                    # Main chat page
+        ├── App.js
         ├── App.css
-        ├── index.js
-        ├── services/api.js           # Axios calls to Spring Boot
+        ├── services/api.js
         └── components/
-            ├── ChatMessage.js/.css   # Chat bubble
-            └── TypingIndicator.js/.css
+            ├── ChatMessage.js
+            ├── ChatMessage.css
+            ├── TypingIndicator.js
+            └── TypingIndicator.css
 ```
 
 ---
 
-## Prerequisites
+## Getting Started
 
-- Java 17+
-- Node.js 18+ & npm
-- A free [Hugging Face account](https://huggingface.co/settings/tokens) (for API token)
-We have to add token while running in local, as we can't keep token in github
+### Prerequisites
+- Java 17
+- Maven
+- Node.js 18+
+- npm
+- Git
 
----
+### 1. Clone the Repository
+```bash
+git clone https://github.com/YOUR-USERNAME/nsp-4-s2-s25app.git
+cd nsp-4-s2-s25app
+```
 
-## Setup & Run
+### 2. Configure Hugging Face Token
+Open `backend/src/main/resources/application.properties`:
+```properties
+huggingface.api.token=YOUR_HF_TOKEN_HERE
+huggingface.api.model=google/flan-t5-large
+```
+Get your free token from: https://huggingface.co/settings/tokens
 
-### 1. Get a Hugging Face Token
-
-1. Sign up at https://huggingface.co
-2. Go to **Settings → Access Tokens → New Token** (read access is enough)
-3. Copy the token (starts with `hf_...`)
-
----
-
-### 2. Start the Backend (Spring Boot)
-
+### 3. Start the Backend
 ```bash
 cd backend
-
-# Set your HF token (Linux/macOS)
-export HF_TOKEN=hf_your_token_here
-
-# OR edit src/main/resources/application.properties directly:
-# huggingface.api.token=hf_your_token_here
-
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
+Backend starts on: http://localhost:8080
 
-Backend runs at: **http://localhost:8080**
-
-Test it:
-```bash
-# Health check
-curl http://localhost:8080/api/health
-
-# Ask a question
-curl -X POST http://localhost:8080/api/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question": "What is DevOps?"}'
-```
-
----
-
-### 3. Start the Frontend (React)
-
+### 4. Start the Frontend
 ```bash
 cd frontend
 npm install
 npm start
 ```
-
-App opens at: **http://localhost:3000**
-
-> The `"proxy": "http://localhost:8080"` in `package.json` forwards
-> `/api/*` requests to Spring Boot automatically — no CORS issues in dev.
+Frontend starts on: http://localhost:3000
 
 ---
 
-## API Reference
+## API Endpoints
 
-### `POST /api/ask`
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | /api/health | Check backend status |
+| POST | /api/ask | Send question, get AI answer |
 
-**Request:**
+### Sample Request
 ```json
+POST /api/ask
 {
-  "question": "What is a CI/CD pipeline?",
-  "context": "Answer in simple terms for a beginner."
+  "question": "What is DevOps?",
+  "context": ""
 }
 ```
 
-**Response:**
+### Sample Response
 ```json
 {
-  "question": "What is a CI/CD pipeline?",
-  "answer": "A CI/CD pipeline is an automated process...",
+  "question": "What is DevOps?",
+  "answer": "DevOps is a combination of development and operations practices...",
   "model": "google/flan-t5-large",
-  "timestamp": "2026-05-22T10:30:00",
-  "responseTimeMs": 3420,
+  "responseTimeMs": 1500,
   "success": true,
-  "errorMessage": null
-}
-```
-
-### `GET /api/health`
-```json
-{
-  "status": "UP",
-  "app": "NSP-4-S2-S25App",
-  "model": "google/flan-t5-large",
-  "timestamp": "2026-05-22T10:30:00"
+  "timestamp": "2026-05-23T10:00:00"
 }
 ```
 
 ---
 
-## Running Tests (Backend)
+## Feature Branch Workflow
 
-```bash
-cd backend
-mvn test
-```
+This project follows a Feature Branch Workflow as part of the DevOps assignment.
 
----
-
-## Git Workflow (Assignment 1)
-
-This repo uses the **Feature Branch Workflow**:
-
+### Branch Structure
 ```
 main
- ├── feature/llm-integration     ← Dev 1
- └── feature/input-validation    ← Dev 2
+├── feature/quick-prompts-ui        (Developer 1)
+├── feature/response-time-display   (Developer 2)
+└── feature/backend-mock-llm-service
 ```
 
-Branches merge to `main` only after a **Pull Request review**.  
-See the Git strategy document for the full merge conflict demo.
+### Developer 1 — feature/quick-prompts-ui
+- Added Kubernetes and Agile methodology quick-prompt buttons
+- Updated QUICK_PROMPTS array in App.js
+
+### Developer 2 — feature/response-time-display
+- Enhanced response time display with model name
+- Updated ChatMessage.js and App.css
+
+### Merge Conflict
+Both developers edited the same line in `App.css` (header background property). Conflict was resolved manually by combining both changes and committed as a merge commit.
+
+### Pull Request Process
+- All features merged to main only via Pull Request
+- PR reviewed before merge
+- Branch protection rules applied on main
 
 ---
 
-## Troubleshooting
+## Git Commands Used
 
-| Problem | Fix |
-|---|---|
-| `503` from LLM | Model is loading on HF free tier. Wait 20–30s and retry. |
-| CORS error | Make sure Spring Boot is on port 8080 and the `proxy` in `package.json` matches. |
-| `hf_YOUR_TOKEN_HERE` error | Replace the placeholder in `application.properties` with your real token. |
-| Frontend blank page | Check browser console — likely a failed `/api/health` fetch if backend is down. |
+```bash
+# Create feature branch
+git checkout -b feature/branch-name
+
+# Stage and commit
+git add .
+git commit -m "feat: description"
+
+# Push branch
+git push origin feature/branch-name
+
+# View branch graph
+git log --oneline --graph --all
+
+# Merge and resolve conflict
+git merge feature/branch-name
+git add .
+git commit -m "merge: resolve conflict"
+```
+
+---
+
+## Issues Fixed During Development
+
+| Issue | Cause | Fix |
+|---|---|---|
+| 400 Bad Request | api.js missing | Created api.js |
+| Calls on wrong port | No proxy config | Added proxy to package.json |
+| question field null | Lombok not working in STS | Manual getters/setters |
+| .builder() error | Lombok @Builder not working | Manual Builder class |
+| ConnectException | DNS resolution failure | Mock LLM responses |
+
+---
+
+## Screenshots
+
+> Add screenshots of your running application here.
+
+---
+
+## Author
+
+- **Name:** Aaryan Katore , Rahul 
+- **Course:** BITS WILP DevOps
+- **Date:** May 2026
