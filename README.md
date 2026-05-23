@@ -54,6 +54,7 @@ nsp-4-s2-s25app/
 - Node.js 18+ & npm
 - A free [Hugging Face account](https://huggingface.co/settings/tokens) (for API token)
 We have to add token while running in local, as we can't keep token in github
+-- VS Code or Intellij software is needed
 
 ---
 
